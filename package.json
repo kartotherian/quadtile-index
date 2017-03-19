@@ -1,0 +1,24 @@
+{
+  "name": "quadtile-index",
+  "version": "0.0.1",
+  "description": "A generic exception with parameter formatting and an optional metrics param",
+  "keywords": [
+    "kartotherian", "quadtile", "quadindex", "quadratic index"
+  ],
+  "main": "quad-index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kartotherian/quadtile-index.git"
+  },
+  "author": "Yuri Astrakhan <YuriAstrakhan@gmail.com>",
+  "license": "MIT",
+  "bugs": "https://github.com/kartotherian/quadtile-index/issues",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "mocha": "^2.4.5"
+  }
+}
