@@ -11,10 +11,6 @@ Quadtiles use a 2-bit tile interleaved addresses. So an x and y values represent
  Boolean validation functions
 ## maxZoom
  Constant: Maximum supported zoom level (26)
-## maxXY
- Constant: Maximum x or y coordinate for the maximum zoom level
-## maxIndex
- Constant: Maximum index for the maximum zoom level
 
 
 See also: [Quadtile indexes](https://wiki.openstreetmap.org/wiki/QuadTiles#Quadtile_implementation)

@@ -1,20 +1,26 @@
 'use strict';
 
+/**
+ * Maximum supported zoom level (26)
+ */
+const maxZoom = 26;
+
+/**
+ * Maximum x or y coordinate for the maximum zoom level
+ */
+const maxXY = Math.pow(2, maxZoom) - 1;
+
+/**
+ * Maximum index for the maximum zoom level
+ */
+const maxIndex = Math.pow(4, maxZoom) - 1;
+
+
 let indexes = {
     /**
      * Maximum supported zoom level (26)
      */
-    maxZoom: 26,
-
-    /**
-     * Maximum x or y coordinate for the maximum zoom level
-     */
-    maxXY: Math.pow(2, 26) - 1,
-
-    /**
-     * Maximum index for the maximum zoom level
-     */
-    maxIndex: Math.pow(4, 26) - 1,
+    maxZoom: maxZoom,
 
     /**
      * Tests if x or y coordinate is valid for the given zoom
@@ -25,7 +31,7 @@ let indexes = {
     isValidCoordinate: function isValidCoordinate(value, zoom) {
         return Number.isInteger(value) && 0 <= value && (
                 zoom === undefined
-                    ? value <= indexes.maxXY
+                    ? value <= maxXY
                     : indexes.isValidZoom(zoom) && value < Math.pow(2, zoom)
             );
     },
@@ -39,7 +45,7 @@ let indexes = {
     isValidIndex: function isValidIndex(index, zoom) {
         return Number.isInteger(index) && 0 <= index && (
                 zoom === undefined
-                    ? index <= indexes.maxIndex
+                    ? index <= maxIndex
                     : indexes.isValidZoom(zoom) && index < Math.pow(4, zoom)
             );
     },
@@ -51,7 +57,7 @@ let indexes = {
      * @return {boolean}
      */
     isValidZoom: function isValidZoom(zoom) {
-        return Number.isInteger(zoom) && 0 <= zoom && zoom <= indexes.maxZoom;
+        return Number.isInteger(zoom) && 0 <= zoom && zoom <= maxZoom;
     },
 
     /**
