@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/kartotherian/quadtile-index.svg?branch=master)](https://travis-ci.org/kartotherian/quadtile-index)
 # quadtile-index
 Convert between x,y tile coordinates and a bitwise-interleaved single integer
 
