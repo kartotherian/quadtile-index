@@ -16,7 +16,7 @@ const maxXY = Math.pow(2, maxZoom) - 1;
 const maxIndex = Math.pow(4, maxZoom) - 1;
 
 
-let indexes = {
+let qidx = {
     /**
      * Maximum supported zoom level (26)
      */
@@ -32,7 +32,7 @@ let indexes = {
         return Number.isInteger(value) && 0 <= value && (
                 zoom === undefined
                     ? value <= maxXY
-                    : indexes.isValidZoom(zoom) && value < Math.pow(2, zoom)
+                    : qidx.isValidZoom(zoom) && value < Math.pow(2, zoom)
             );
     },
 
@@ -46,7 +46,7 @@ let indexes = {
         return Number.isInteger(index) && 0 <= index && (
                 zoom === undefined
                     ? index <= maxIndex
-                    : indexes.isValidZoom(zoom) && index < Math.pow(4, zoom)
+                    : qidx.isValidZoom(zoom) && index < Math.pow(4, zoom)
             );
     },
 
@@ -68,7 +68,7 @@ let indexes = {
      * @return {number}
      */
     xyToIndex: function xyToIndex(x, y, zoom) {
-        if (!indexes.isValidCoordinate(x, zoom) || !indexes.isValidCoordinate(y, zoom)) {
+        if (!qidx.isValidCoordinate(x, zoom) || !qidx.isValidCoordinate(y, zoom)) {
             throw new Error(`Invalid X,Y coordinates ${x}, ${y}`);
         }
 
@@ -89,7 +89,7 @@ let indexes = {
      * @return {number[]} returns a two value array as [x,y]
      */
     indexToXY: function indexToXY(index, zoom) {
-        if (!indexes.isValidIndex(index, zoom)) {
+        if (!qidx.isValidIndex(index, zoom)) {
             throw new Error(`Invalid index ${index}`);
         }
 
@@ -152,4 +152,4 @@ function expandEven26(value) {
         | (value & 1 << 12) << 12;
 }
 
-module.exports = indexes;
+module.exports = qidx;

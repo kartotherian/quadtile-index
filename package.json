@@ -1,6 +1,6 @@
 {
   "name": "quadtile-index",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A generic exception with parameter formatting and an optional metrics param",
   "keywords": [
     "kartotherian", "quadtile", "quadindex", "quadratic index"

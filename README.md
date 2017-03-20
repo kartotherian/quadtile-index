@@ -2,7 +2,11 @@
 # quadtile-index
 Convert between x,y tile coordinates and a bitwise-interleaved single integer
 
-Quadtiles use a 2-bit tile interleaved addresses. So an x and y values represented as bits would result in **xyxyxyxy xyxyxyxy xyxyxyxy xyxyxyxy** index value.
+Quadtiles use a 2-bit tile interleaved addresses. An **x** and **y** coordinate value bit representation of up to 26 bits each can be converted to a single integer value up to 56 bits. The limit is due to JavaScript's maximum lossless integer representation. For example, two 8 bit values **xxxx xxxx** and **yyyy yyyy** would produce a singel **xyxyxyxy xyxyxyxy xyxyxyxy xyxyxyxy** index value.
+
+The library will assert the validity of each value, and allows optional zoom for additional verification.
+
+For more info, see [quadtile indexes info](https://wiki.openstreetmap.org/wiki/QuadTiles#Quadtile_implementation)
 
 ## xyToIndex(x, y, [zoom])
  Convert x,y into a single integer with alternating bits
@@ -12,6 +16,3 @@ Quadtiles use a 2-bit tile interleaved addresses. So an x and y values represent
  Boolean validation functions
 ## maxZoom
  Constant: Maximum supported zoom level (26)
-
-
-See also: [Quadtile indexes](https://wiki.openstreetmap.org/wiki/QuadTiles#Quadtile_implementation)

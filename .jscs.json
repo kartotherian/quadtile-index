@@ -12,6 +12,16 @@
   "requireEarlyReturn": false,
   "disallowMultipleVarDecl": null,
 
+  "requireCurlyBraces": [
+    "if",
+    "else",
+    "for",
+    "while",
+    "do",
+    "try",
+    "catch"
+  ],
+
   "excludeFiles": [
     "node_modules/**",
     "performance/**",
