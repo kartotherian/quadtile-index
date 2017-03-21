@@ -4,6 +4,7 @@
  * Maximum supported zoom level (26)
  */
 const maxZoom = 26;
+exports.maxZoom = maxZoom;
 
 /**
  * Maximum x or y coordinate for the maximum zoom level
@@ -16,93 +17,85 @@ const maxXY = Math.pow(2, maxZoom) - 1;
 const maxIndex = Math.pow(4, maxZoom) - 1;
 
 
-let qidx = {
-    /**
-     * Maximum supported zoom level (26)
-     */
-    maxZoom: maxZoom,
+/**
+ * Tests if x or y coordinate is valid for the given zoom
+ * @param {number} value
+ * @param {number} [zoom] if not given, uses maxZoom
+ * @return {boolean}
+ */
+exports.isValidCoordinate = function isValidCoordinate(value, zoom) {
+    return Number.isInteger(value) && 0 <= value && (
+            zoom === undefined
+                ? value <= maxXY
+                : exports.isValidZoom(zoom) && value < Math.pow(2, zoom)
+        );
+};
 
-    /**
-     * Tests if x or y coordinate is valid for the given zoom
-     * @param {number} value
-     * @param {number} [zoom] if not given, uses maxZoom
-     * @return {boolean}
-     */
-    isValidCoordinate: function isValidCoordinate(value, zoom) {
-        return Number.isInteger(value) && 0 <= value && (
-                zoom === undefined
-                    ? value <= maxXY
-                    : qidx.isValidZoom(zoom) && value < Math.pow(2, zoom)
-            );
-    },
+/**
+ * Tests if index is valid for the given zoom
+ * @param {number} index
+ * @param {number} [zoom] if not given, uses maxZoom
+ * @return {boolean}
+ */
+exports.isValidIndex = function isValidIndex(index, zoom) {
+    return Number.isInteger(index) && 0 <= index && (
+            zoom === undefined
+                ? index <= maxIndex
+                : exports.isValidZoom(zoom) && index < Math.pow(4, zoom)
+        );
+};
 
-    /**
-     * Tests if index is valid for the given zoom
-     * @param {number} index
-     * @param {number} [zoom] if not given, uses maxZoom
-     * @return {boolean}
-     */
-    isValidIndex: function isValidIndex(index, zoom) {
-        return Number.isInteger(index) && 0 <= index && (
-                zoom === undefined
-                    ? index <= maxIndex
-                    : qidx.isValidZoom(zoom) && index < Math.pow(4, zoom)
-            );
-    },
+/**
+ * Tests if zoom is valid. Zoom may not exceed 26 because the index coordinate we use
+ * will exceed the largest JavaScript int of 2^53  (which is 4^26)
+ * @param {number} zoom
+ * @return {boolean}
+ */
+exports.isValidZoom = function isValidZoom(zoom) {
+    return Number.isInteger(zoom) && 0 <= zoom && zoom <= maxZoom;
+};
 
-    /**
-     * Tests if zoom is valid. Zoom may not exceed 26 because the index coordinate we use
-     * will exceed the largest JavaScript int of 2^53  (which is 4^26)
-     * @param {number} zoom
-     * @return {boolean}
-     */
-    isValidZoom: function isValidZoom(zoom) {
-        return Number.isInteger(zoom) && 0 <= zoom && zoom <= maxZoom;
-    },
+/**
+ * Convert x,y into a single integer with alternating bits
+ * @param {number} x
+ * @param {number} y
+ * @param {number} [zoom] optional zoom level to validate x,y coordinates
+ * @return {number}
+ */
+exports.xyToIndex = function xyToIndex(x, y, zoom) {
+    if (!exports.isValidCoordinate(x, zoom) || !exports.isValidCoordinate(y, zoom)) {
+        throw new Error(`Invalid X,Y coordinates ${x}, ${y}`);
+    }
 
-    /**
-     * Convert x,y into a single integer with alternating bits
-     * @param {number} x
-     * @param {number} y
-     * @param {number} [zoom] optional zoom level to validate x,y coordinates
-     * @return {number}
-     */
-    xyToIndex: function xyToIndex(x, y, zoom) {
-        if (!qidx.isValidCoordinate(x, zoom) || !qidx.isValidCoordinate(y, zoom)) {
-            throw new Error(`Invalid X,Y coordinates ${x}, ${y}`);
-        }
+    let result = expandEven26(x & 0x1fff) + expandEven26(y & 0x1fff) * 2;
+    if (x >= 0x2000) {
+        result += expandEven26((x & 0x3ffe000) >> 13) * (1 << 26);
+    }
+    if (y >= 0x2000) {
+        result += expandEven26((y & 0x3ffe000) >> 13) * (1 << 27);
+    }
+    return result;
+};
 
-        let result = expandEven26(x & 0x1fff) + expandEven26(y & 0x1fff) * 2;
-        if (x >= 0x2000) {
-            result += expandEven26((x & 0x3ffe000) >> 13) * (1 << 26);
-        }
-        if (y >= 0x2000) {
-            result += expandEven26((y & 0x3ffe000) >> 13) * (1 << 27);
-        }
-        return result;
-    },
+/**
+ * Convert index into the x,y coordinates
+ * @param {number} index
+ * @param {number} [zoom] optional zoom level to validate x,y coordinates
+ * @return {number[]} returns a two value array as [x,y]
+ */
+exports.indexToXY = function indexToXY(index, zoom) {
+    if (!exports.isValidIndex(index, zoom)) {
+        throw new Error(`Invalid index ${index}`);
+    }
 
-    /**
-     * Convert index into the x,y coordinates
-     * @param {number} index
-     * @param {number} [zoom] optional zoom level to validate x,y coordinates
-     * @return {number[]} returns a two value array as [x,y]
-     */
-    indexToXY: function indexToXY(index, zoom) {
-        if (!qidx.isValidIndex(index, zoom)) {
-            throw new Error(`Invalid index ${index}`);
-        }
+    if (index < (1 << 26)) {
+        return [compactEven26(index), compactEven26(index >> 1)];
+    }
 
-        if (index < (1 << 26)) {
-            return [compactEven26(index), compactEven26(index >> 1)];
-        }
-
-        let low = (index % (1 << 26)) | 0,
-            high = (index / (1 << 26)) | 0;
-        return [compactEven26(high) * (1 << 13) + compactEven26(low),
-            compactEven26(high >> 1) * (1 << 13) + compactEven26(low >> 1)];
-    },
-
+    let low = (index % (1 << 26)) | 0,
+        high = (index / (1 << 26)) | 0;
+    return [compactEven26(high) * (1 << 13) + compactEven26(low),
+        compactEven26(high >> 1) * (1 << 13) + compactEven26(low >> 1)];
 };
 
 
@@ -151,5 +144,3 @@ function expandEven26(value) {
         | (value & 1 << 11) << 11
         | (value & 1 << 12) << 12;
 }
-
-module.exports = qidx;
