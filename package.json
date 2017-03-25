@@ -1,21 +1,25 @@
 {
   "name": "quadtile-index",
   "version": "0.0.4",
-  "description": "A generic exception with parameter formatting and an optional metrics param",
-  "keywords": [
-    "kartotherian", "quadtile", "quadindex", "quadratic index"
-  ],
+  "description": "Convert between x,y map tile coordinates and a bitwise-interleaved single integer",
   "main": "quad-index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "preversion": "npm test"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/kartotherian/quadtile-index.git"
-  },
+  "repository": "kartotherian/quadtile-index",
+  "keywords": [
+    "kartotherian",
+    "quadtile",
+    "quadindex",
+    "quadratic index"
+  ],
   "author": "Yuri Astrakhan <YuriAstrakhan@gmail.com>",
   "license": "MIT",
   "bugs": "https://github.com/kartotherian/quadtile-index/issues",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
   },
   "devDependencies": {

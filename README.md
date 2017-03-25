@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/kartotherian/quadtile-index.svg?branch=master)](https://travis-ci.org/kartotherian/quadtile-index)
+
 # quadtile-index
-Convert between x,y tile coordinates and a bitwise-interleaved single integer
+Convert between x,y map tile coordinates and a bitwise-interleaved single integer
 
 Quadtiles use a 2-bit tile interleaved addresses. An **x** and **y** coordinate value bit representation of up to 26 bits each can be converted to a single integer value up to 56 bits. The limit is due to JavaScript's maximum lossless integer representation. For example, two 8 bit values **xxxx xxxx** and **yyyy yyyy** would produce a singel **xyxyxyxy xyxyxyxy xyxyxyxy xyxyxyxy** index value.
 
