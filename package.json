@@ -1,6 +1,6 @@
 {
   "name": "quadtile-index",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Convert between x,y map tile coordinates and a bitwise-interleaved single integer",
   "main": "quad-index.js",
   "scripts": {
